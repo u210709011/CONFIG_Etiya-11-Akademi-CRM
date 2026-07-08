@@ -1,0 +1,7 @@
+# contact-info-service - test ortami.
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false

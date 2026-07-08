@@ -1,0 +1,15 @@
+# contact-info-service - tum ortamlar icin gecerli ortak konfigurasyon.
+# Ortama ozel degerler: contact-info-service-dev.yml / contact-info-service-test.yml / contact-info-service-prod.yml
+
+server:
+  port: 8084
+
+spring:
+  jpa:
+    open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
