@@ -2,7 +2,7 @@
 # Ortama ozel degerler: customer-service-dev.yml / customer-service-test.yml / customer-service-prod.yml
 
 server:
-  port: 8081
+  port: ${PORT:0}
 
 spring:
   jpa:

@@ -1,4 +1,4 @@
-# Customer Service - prod ortami: adresler ortam degiskenlerinden gelir,
+# Party Service - prod ortami: adresler ortam degiskenlerinden gelir,
 # varsayilanlar container agindaki servis adlarina goredir.
 
 spring:
@@ -25,4 +25,4 @@ eureka:
 
 logging:
   level:
-    com.etiya.crm.customerservice: INFO
+    com.etiya.crm.partyservice: INFO

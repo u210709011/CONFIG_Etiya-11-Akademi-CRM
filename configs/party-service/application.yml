@@ -1,8 +1,8 @@
-# Customer Service - tum ortamlar icin gecerli ortak konfigurasyon.
-# Ortama ozel degerler: customer-service-dev.yml / customer-service-test.yml / customer-service-prod.yml
+# Party Service - tum ortamlar icin gecerli ortak konfigurasyon.
+# Ortama ozel degerler: party-service-dev.yml / party-service-test.yml / party-service-prod.yml
 
 server:
-  port: 8081
+  port: ${PORT:0}
 
 spring:
   jpa:
@@ -13,16 +13,14 @@ spring:
     enabled: true
   kafka:
     consumer:
-      group-id: customer-service
+      group-id: party-service
       auto-offset-reset: earliest
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.trusted.packages: com.etiya.crm.customerservice.events
-        spring.json.value.default.type: com.etiya.crm.customerservice.events.PartyEvent
+        spring.json.trusted.packages: com.etiya.crm.partyservice.events
+        spring.json.value.default.type: com.etiya.crm.partyservice.events.CustomerDeletedEvent
         spring.json.use.type.headers: false
-    producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 eureka:
   instance:

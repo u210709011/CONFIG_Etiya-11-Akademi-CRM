@@ -1,4 +1,4 @@
-# Customer Service - test ortami.
+# Party Service - test ortami.
 # Test altyapisinin adresleri netlestiginde asagidaki degerler guncellenir.
 
 spring:
@@ -25,4 +25,4 @@ eureka:
 
 logging:
   level:
-    com.etiya.crm.customerservice: INFO
+    com.etiya.crm.partyservice: INFO

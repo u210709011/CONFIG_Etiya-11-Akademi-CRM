@@ -1,4 +1,4 @@
-# Customer Service - dev ortami: tum altyapi lokalde (podman compose) calisir.
+# Party Service - dev ortami: tum altyapi lokalde (podman compose) calisir.
 
 spring:
   datasource:
@@ -24,4 +24,4 @@ eureka:
 
 logging:
   level:
-    com.etiya.crm.customerservice: DEBUG
+    com.etiya.crm.partyservice: DEBUG
