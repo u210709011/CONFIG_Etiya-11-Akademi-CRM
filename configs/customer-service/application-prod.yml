@@ -3,7 +3,7 @@
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://postgres:5432/customer_db}
+    url: ${DB_URL:jdbc:postgresql://postgres:5432/crm}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   kafka:
