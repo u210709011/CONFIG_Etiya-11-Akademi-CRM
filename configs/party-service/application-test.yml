@@ -25,4 +25,4 @@ eureka:
 
 logging:
   level:
-    com.etiya.crm.customerservice: INFO
+    com.etiya.crm.partyservice: INFO
