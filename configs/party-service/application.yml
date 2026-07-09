@@ -1,35 +1,28 @@
-# Customer Service - tum ortamlar icin gecerli ortak konfigurasyon.
-# Ortama ozel degerler: customer-service-dev.yml / customer-service-test.yml / customer-service-prod.yml
-
-server:
-  port: 8081
+# Party Service - test ortami.
+# Test altyapisinin adresleri netlestiginde asagidaki degerler guncellenir.
 
 spring:
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: validate
-  flyway:
-    enabled: true
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/crm}
+    username: ${DB_USERNAME:crm}
+    password: ${DB_PASSWORD:crm}
   kafka:
-    consumer:
-      group-id: customer-service
-      auto-offset-reset: earliest
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.trusted.packages: com.etiya.crm.customerservice.events
-        spring.json.value.default.type: com.etiya.crm.customerservice.events.PartyEvent
-        spring.json.use.type.headers: false
-    producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/crm}
 
 eureka:
-  instance:
-    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
+logging:
+  level:
+    com.etiya.crm.partyservice: INFO
