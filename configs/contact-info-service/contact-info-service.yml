@@ -2,7 +2,7 @@
 # Ortama ozel degerler: contact-info-service-dev.yml / contact-info-service-test.yml / contact-info-service-prod.yml
 
 server:
-  port: 8084
+  port: ${PORT:0}
 
 spring:
   jpa:
