@@ -1,0 +1,23 @@
+# lookup-service - dev ortami: tum altyapi lokalde (podman compose) calisir.
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lookup_db
+    username: crm
+    password: crm
+  jpa:
+    show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/crm
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    com.etiya.crm.lookupservice: DEBUG

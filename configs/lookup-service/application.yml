@@ -1,0 +1,29 @@
+# lookup-service - tum ortamlar icin gecerli ortak konfigurasyon.
+# Ortama ozel degerler: application-dev.yml / application-test.yml / application-prod.yml
+# NOT: Bu servis event uretmez/tuketmez -> kafka/redis konfigurasyonu YOK.
+
+server:
+  port: ${PORT:0}
+
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate      # sema Flyway (V1/V2) ile gelir; Hibernate sadece dogrular
+  flyway:
+    enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.etiya.crm.lookupservice: INFO
