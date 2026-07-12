@@ -1,0 +1,61 @@
+# API Gateway - tum ortamlar icin gecerli ortak konfigurasyon.
+# Ortama ozel degerler: api-gateway-dev.yml / api-gateway-test.yml / api-gateway-prod.yml
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,gateway
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              # Route'lar artik asagida elle tanimli. Otomatik /{service-id}/**
+              # yonlendirmesi kapali; acik kalirsa internal servis adlari
+              # (customer-service, party-service...) dis API yuzeyine sizar ve
+              # ayni kaynaga iki farkli path'ten erisilebilir hale gelir.
+              enabled: false
+              lower-case-service-id: true
+          routes:
+            - id: party-service
+              uri: lb://party-service
+              predicates:
+                - Path=/api/v1/parties/**,/api/v1/individuals/**
+
+            - id: customer-service
+              uri: lb://customer-service
+              predicates:
+                - Path=/api/v1/customers/**
+
+            - id: contact-info-service
+              uri: lb://contact-info-service
+              predicates:
+                - Path=/api/v1/addresses/**,/api/v1/contact-mediums/**
+
+            - id: lookup-service
+              uri: lb://lookup-service
+              predicates:
+                - Path=/api/v1/lookups/**
+
+            # Eureka paneline gateway uzerinden erisim kolayligi. Ortama gore
+            # dashboard adresi degisir (bkz. eureka.client.service-url).
+            - id: discovery-server-ui
+              uri: ${discovery.dashboard-url:http://localhost:8761}
+              predicates:
+                - Path=/eureka/web
+              filters:
+                - SetPath=/
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.issuer-uri}
