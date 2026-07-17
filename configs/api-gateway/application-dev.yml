@@ -10,6 +10,12 @@ discovery:
 
 keycloak:
   issuer-uri: http://localhost:8180/realms/crm
+  client-id: crm-client
+  client-secret: crm-client-secret
+
+# Angular dev server (ng serve) buradan istek atar.
+cors:
+  allowed-origins: http://localhost:4200
 
 logging:
   level:
