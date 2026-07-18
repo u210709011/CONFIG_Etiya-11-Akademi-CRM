@@ -1,5 +1,7 @@
 # contact-info-service - dev ortami.
-# Migration kullanilmiyor; semalar Hibernate ddl-auto: update ile senkronize edilir.
+# Sema artik Flyway ile yonetilir (bkz. src/main/resources/db/migration). Bu ortamda
+# DB onceden Hibernate ddl-auto: update ile olusturulmustu - baseline-on-migrate,
+# V1'i (baseline) calistirmadan "zaten uygulanmis" sayar; V2+ normal calisir.
 
 spring:
   datasource:
@@ -7,9 +9,10 @@ spring:
     username: crm
     password: crm
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: true
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 1
   security:
     oauth2:
       resourceserver:

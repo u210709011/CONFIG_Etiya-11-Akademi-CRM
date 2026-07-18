@@ -23,6 +23,12 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_URL:http://discovery-server:8761/eureka}
 
+# client-secret icin guvensiz bir varsayilan birakilmadi (bkz. api-gateway ayni disiplin).
+# crm-client (interaktif login) DEGIL, ayri M2M service-account client'i.
+keycloak:
+  client-id: ${KEYCLOAK_CLIENT_ID:customer-service-m2m}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+
 logging:
   level:
     com.etiya.crm.customerservice: INFO

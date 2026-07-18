@@ -22,6 +22,15 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+# PartyEventListener/ContactMediumEventListener gibi istekle tetiklenmeyen
+# Kafka consumer'larda FeignConfig'in JWT propagation'i yapacak bir kullanici
+# istegi yok - service-account (client_credentials) token'i icin. crm-client
+# (api-gateway'in interaktif login client'i) DEGIL, ayri bir M2M client
+# kullanilir - bkz. infra/keycloak/crm-realm.json.
+keycloak:
+  client-id: customer-service-m2m
+  client-secret: customer-service-m2m-secret
+
 logging:
   level:
     com.etiya.crm.customerservice: DEBUG

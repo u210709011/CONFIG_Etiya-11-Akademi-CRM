@@ -23,6 +23,11 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
 
+# service-account (client_credentials) - crm-client (interaktif login) DEGIL, ayri M2M client.
+keycloak:
+  client-id: ${KEYCLOAK_CLIENT_ID:customer-service-m2m}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:customer-service-m2m-secret}
+
 logging:
   level:
     com.etiya.crm.customerservice: INFO
