@@ -3,8 +3,15 @@
 
 server:
   port: ${PORT:0}
+  # Gateway'in ekledigi X-Forwarded-* header'larina guven: springdoc bu sayede
+  # OpenAPI servers[] alanini gateway'in disaridan gorunen adresiyle (localhost:8080)
+  # uretir, kendi ham host:port'unu (rastgele PORT) degil - Swagger UI "Try it out"
+  # aksi halde tarayicidan erisilemeyen bir adrese gitmeye calisir.
+  forward-headers-strategy: framework
 
 spring:
+  messages:
+    basename: messages/messages
   jpa:
     open-in-view: false
     hibernate:

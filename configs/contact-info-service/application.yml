@@ -3,6 +3,8 @@
 
 server:
   port: ${PORT:0}
+  # Gateway'in ekledigi X-Forwarded-* header'larina guven - bkz. customer-service/application.yml aciklamasi.
+  forward-headers-strategy: framework
 
 spring:
   jpa:
