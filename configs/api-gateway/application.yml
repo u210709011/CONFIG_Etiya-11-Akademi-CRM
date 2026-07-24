@@ -43,10 +43,15 @@ spring:
               predicates:
                 - Path=/api/v1/addresses/**,/api/v1/contact-mediums/**
 
-            - id: lookup-service
-              uri: lb://lookup-service
+            - id: order-service
+              uri: lb://order-service
               predicates:
-                - Path=/api/v1/lookups/**
+                - Path=/api/v1/orders/**
+            
+            - id: product-service
+              uri: lb://product-service
+              predicates:
+                - Path=/api/v1/product-specs/**
 
             # Eureka paneline gateway uzerinden erisim kolayligi. Ortama gore
             # dashboard adresi degisir (bkz. eureka.client.service-url).
