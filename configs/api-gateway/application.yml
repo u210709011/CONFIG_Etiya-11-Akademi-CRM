@@ -51,8 +51,7 @@ spring:
             - id: product-service
               uri: lb://product-service
               predicates:
-                - Path=/api/v1/product-specs/**
-                - Path=/api/v1/product-catalogs/**
+                - Path=/api/v1/product-specs/**,/api/v1/product-catalogs/**
 
             # Eureka paneline gateway uzerinden erisim kolayligi. Ortama gore
             # dashboard adresi degisir (bkz. eureka.client.service-url).
