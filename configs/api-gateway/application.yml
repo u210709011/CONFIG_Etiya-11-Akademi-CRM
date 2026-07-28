@@ -53,6 +53,11 @@ spring:
               predicates:
                 - Path=/api/v1/product-specs/**,/api/v1/product-catalogs/**
 
+            - id: lookup-service
+              uri: lb://lookup-service
+              predicates:
+                - Path=/api/v1/general-types/**,/api/v1/general-statuses/**,/api/v1/characteristic-values/**,/api/v1/characteristics/**,/api/v1/resource-specs/**,/api/v1/service-specs/**,/api/v1/type-values/**
+
             # Eureka paneline gateway uzerinden erisim kolayligi. Ortama gore
             # dashboard adresi degisir (bkz. eureka.client.service-url).
             - id: discovery-server-ui
