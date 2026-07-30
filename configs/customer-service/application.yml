@@ -76,3 +76,10 @@ resilience4j:
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
+        # 404/409/400 gibi normal is kurali cevaplari (musteri bulunamadi, dogrulama hatasi vb.)
+        # downstream'in cokmesi degildir - bunlari "hata" sayarsak testte/normal kullanimda ust
+        # uste birkac 404 alinmasi bile circuit'i acip herkese 503 dondurebilir. FeignClientException
+        # butun 4xx alt tiplerini kapsar (NotFound/Conflict/BadRequest/...); 5xx ve baglanti
+        # hatalari (FeignServerException, RetryableException) yine hata olarak sayilmaya devam eder.
+        ignoreExceptions:
+          - feign.FeignException$FeignClientException
