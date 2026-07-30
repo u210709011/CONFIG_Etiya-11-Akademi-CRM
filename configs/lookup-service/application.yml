@@ -8,6 +8,11 @@ server:
   forward-headers-strategy: framework
 
 spring:
+  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages",
+  # root'u arar) bunu bulamiyordu - her resolve() cagrisi NoSuchMessageException firlatiyor,
+  # yani her custom exception (EntityNotFoundException vb.) 404/409 yerine 500'e siziyordu.
+  messages:
+    basename: messages/messages
   jpa:
     open-in-view: false
     hibernate:
