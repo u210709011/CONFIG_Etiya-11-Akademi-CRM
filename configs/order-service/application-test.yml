@@ -20,6 +20,10 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
 
+keycloak:
+  client-id: ${KEYCLOAK_CLIENT_ID:order-service-m2m}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:order-service-m2m-secret}
+
 logging:
   level:
     com.etiya.crm.orderservice: INFO

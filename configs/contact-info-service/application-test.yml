@@ -12,6 +12,10 @@ spring:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/crm}
 
+keycloak:
+  client-id: ${KEYCLOAK_CLIENT_ID:contact-info-service-m2m}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:contact-info-service-m2m-secret}
+
 eureka:
   instance:
     prefer-ip-address: true
