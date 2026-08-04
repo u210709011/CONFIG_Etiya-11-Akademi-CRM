@@ -22,4 +22,5 @@ keycloak:
 
 eureka:
   instance:
-    prefer-ip-address: true
+    prefer-ip-address: false
+    hostname: ${spring.application.name}
