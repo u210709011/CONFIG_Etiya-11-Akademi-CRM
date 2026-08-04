@@ -1,6 +1,10 @@
 # contact-info-service - test ortami.
 
 spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/contact_info_db}
+    username: ${DB_USERNAME:crm}
+    password: ${DB_PASSWORD:crm}
   jpa:
     show-sql: false
   flyway:
