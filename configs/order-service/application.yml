@@ -12,8 +12,10 @@ spring:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/order_db}
     username: ${DB_USERNAME:crm}
     password: ${DB_PASSWORD:crm}
+  # customer-service/contact-info-service/party-service/api-gateway ile ayni desen -
+  # messages/messages.properties alt klasorde oldugu icin bu sekilde tutarli yaziliyor.
   messages:
-    basename: messages.messages
+    basename: messages/messages
 
 eureka:
   instance:

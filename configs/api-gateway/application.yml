@@ -15,6 +15,13 @@ management:
         include: health,info,metrics,gateway
 
 spring:
+  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages",
+  # root'u arar) bunu bulamiyordu - her resolve() cagrisi NoSuchMessageException firlatiyor,
+  # yani AuthExceptionHandler'daki her custom exception (AccountLockedException vb.) dogru
+  # 401/423 yerine 500'e siziyordu (bkz. customer-service/contact-info-service/party-service
+  # application.yml'deki ayni fix).
+  messages:
+    basename: messages/messages
   cloud:
     gateway:
       server:
