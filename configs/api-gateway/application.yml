@@ -82,3 +82,6 @@ springdoc:
         url: /v3/api-docs/contact-info-service
       - name: Lookup Service
         url: /v3/api-docs/lookup-service
+      - name: Order Service
+        url: /v3/api-docs/order-service
+
