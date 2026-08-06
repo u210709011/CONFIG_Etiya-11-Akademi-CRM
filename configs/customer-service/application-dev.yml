@@ -11,6 +11,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+      # Redis erisilemez/yaniti yavassa istek Lettuce'un varsayilan (uzun) timeout'una
+      # kadar askida kalmasin diye - Feign'deki 2s/4s disiplinin ayni sekilde Redis icin de.
+      connect-timeout: 2000ms
+      timeout: 2000ms
   security:
     oauth2:
       resourceserver:

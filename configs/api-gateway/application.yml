@@ -15,6 +15,13 @@ management:
         include: health,info,metrics,gateway
 
 spring:
+  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages",
+  # root'u arar) bunu bulamiyordu - her resolve() cagrisi NoSuchMessageException firlatiyor,
+  # yani AuthExceptionHandler'daki her custom exception (AccountLockedException vb.) dogru
+  # 401/423 yerine 500'e siziyordu (bkz. customer-service/contact-info-service/party-service
+  # application.yml'deki ayni fix).
+  messages:
+    basename: messages/messages
   cloud:
     gateway:
       server:
@@ -52,6 +59,11 @@ spring:
               uri: lb://product-service
               predicates:
                 - Path=/api/v1/product-specs/**,/api/v1/product-catalogs/**
+
+            - id: lookup-service
+              uri: lb://lookup-service
+              predicates:
+                - Path=/api/v1/general-types/**,/api/v1/general-statuses/**,/api/v1/characteristic-values/**,/api/v1/characteristics/**,/api/v1/resource-specs/**,/api/v1/service-specs/**,/api/v1/type-values/**
 
             # Eureka paneline gateway uzerinden erisim kolayligi. Ortama gore
             # dashboard adresi degisir (bkz. eureka.client.service-url).

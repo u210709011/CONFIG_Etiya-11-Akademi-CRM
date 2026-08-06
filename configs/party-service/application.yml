@@ -5,6 +5,24 @@ server:
   port: ${PORT:0}
 
 spring:
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+    # Spring Cloud OpenFeign'in circuit breaker entegrasyonu varsayilan olarak her cagriyi
+    # ayri bir ExecutorService thread'inde calistirir (TimeLimiter). JwtTokenPropagationInterceptor
+    # ise kullanicinin JWT'sini SecurityContextHolder (thread-local) uzerinden okuyor - farkli
+    # thread'de bu context bos gelir ve interceptor sessizce gercek kullanici yerine M2M
+    # service-account token'ini gonderir. disable-time-limiter=true cagriyi cagiran thread'de
+    # senkron calistirir; timeout zaten asagidaki feign.client.config ile saglaniyor.
+    circuitbreaker:
+      resilience4j:
+        disable-time-limiter: true
+  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages",
+  # root'u arar) bunu bulamiyordu - her resolve() cagrisi NoSuchMessageException firlatiyor,
+  # yani her custom exception (PartyNotFoundException vb.) 404/409 yerine 500'e siziyordu.
+  messages:
+    basename: messages/messages
   jpa:
     open-in-view: false
     hibernate:
@@ -39,8 +57,35 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,circuitbreakers
 
 logging:
   level:
     com.etiya.crm.partyservice: INFO
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 2000
+        readTimeout: 4000
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        # 404/409/400 gibi normal is kurali cevaplari (musteri bulunamadi, dogrulama hatasi vb.)
+        # downstream'in cokmesi degildir - bunlari "hata" sayarsak testte/normal kullanimda ust
+        # uste birkac 404 alinmasi bile circuit'i acip herkese 503 dondurebilir. FeignClientException
+        # butun 4xx alt tiplerini kapsar (NotFound/Conflict/BadRequest/...); 5xx ve baglanti
+        # hatalari (FeignServerException, RetryableException) yine hata olarak sayilmaya devam eder.
+        ignoreExceptions:
+          - feign.FeignException$FeignClientException
