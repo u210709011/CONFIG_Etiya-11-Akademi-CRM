@@ -58,7 +58,7 @@ spring:
             - id: product-service
               uri: lb://product-service
               predicates:
-                - Path=/api/v1/product-specs/**,/api/v1/product-catalogs/**,/api/v1/products/**,/api/v1/product-catalog-offerings/**,/api/v1/product-offerings/**,/api/v1/product-offering-relations/**,/api/v1/product-relations/**,/api/v1/product-characteristic-values/**,/api/v1/product-spec-resource-specs/**,/api/v1/product-spec-service-specs/**,/api/v1/product-campaigns/**,/api/v1/campaign-offerings/**
+                - Path=/api/v1/product-specs/**,/api/v1/product-catalogs/**,/api/v1/products/**,/api/v1/product-catalog-offerings/**,/api/v1/product-offerings/**,/api/v1/product-offering-relations/**,/api/v1/product-relations/**,/api/v1/product-characteristic-values/**,/api/v1/product-spec-resource-specs/**,/api/v1/product-spec-service-specs/**,/api/v1/product-campaigns/**,/api/v1/campaign-offerings/**,/api/v1/product-characteristic-values/**
 
             - id: lookup-service
               uri: lb://lookup-service
