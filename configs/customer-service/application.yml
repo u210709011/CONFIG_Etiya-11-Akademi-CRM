@@ -10,6 +10,17 @@ server:
   forward-headers-strategy: framework
 
 spring:
+  # B-15: NoHandlerFoundException varsayilan olarak firlatilmaz, DispatcherServlet tamamen
+  # eslesmeyen path'lerde exception resolver'lara (dolayisiyla GlobalExceptionHandler'a) hic
+  # ugramadan dogrudan response.sendError(404) cagirir - bu da bizim ErrorResponse kontratimiz
+  # yerine Spring Boot'un varsayilan /error govdesini dondurur. add-mappings:false olmadan bu
+  # ayar hicbir etki etmez (static resource handler her seyi "eslesmedi" yerine kendi 404'une
+  # yonlendirebiliyor) - ikisi birlikte gerekiyor.
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
   cloud:
     openfeign:
       circuitbreaker:

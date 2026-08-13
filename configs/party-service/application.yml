@@ -5,6 +5,12 @@ server:
   port: ${PORT:0}
 
 spring:
+  # B-15: bkz. customer-service/application.yml ayni ayarin aciklamasi.
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
   cloud:
     openfeign:
       circuitbreaker:
