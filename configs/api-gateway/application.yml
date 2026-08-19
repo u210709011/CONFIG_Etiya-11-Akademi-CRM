@@ -15,11 +15,9 @@ management:
         include: health,info,metrics,gateway
 
 spring:
-  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages",
-  # root'u arar) bunu bulamiyordu - her resolve() cagrisi NoSuchMessageException firlatiyor,
-  # yani AuthExceptionHandler'daki her custom exception (AccountLockedException vb.) dogru
-  # 401/423 yerine 500'e siziyordu (bkz. customer-service/contact-info-service/party-service
-  # application.yml'deki ayni fix).
+  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages") onu
+  # bulamiyor, resolve() NoSuchMessageException atip custom exception'lari (orn.
+  # AccountLockedException) 401/423 yerine 500'e dusuruyordu. Ayni fix diger servislerde de var.
   messages:
     basename: messages/messages
   cloud:
@@ -28,10 +26,8 @@ spring:
         webflux:
           discovery:
             locator:
-              # Route'lar artik asagida elle tanimli. Otomatik /{service-id}/**
-              # yonlendirmesi kapali; acik kalirsa internal servis adlari
-              # (customer-service, party-service...) dis API yuzeyine sizar ve
-              # ayni kaynaga iki farkli path'ten erisilebilir hale gelir.
+              # Route'lar asagida elle tanimli; otomatik /{service-id}/** kapali - acik kalirsa
+              # internal servis adlari dis API'ye sizar, ayni kaynak iki path'ten erisilebilir olur.
               enabled: false
               lower-case-service-id: true
           routes:
@@ -65,8 +61,7 @@ spring:
               predicates:
                 - Path=/api/v1/general-types/**,/api/v1/general-statuses/**,/api/v1/characteristic-values/**,/api/v1/characteristics/**,/api/v1/resource-specs/**,/api/v1/service-specs/**,/api/v1/type-values/**
 
-            # Eureka paneline gateway uzerinden erisim kolayligi. Ortama gore
-            # dashboard adresi degisir (bkz. eureka.client.service-url).
+            # Eureka paneline gateway uzerinden erisim; adres ortama gore degisir (bkz. discovery.dashboard-url).
             - id: discovery-server-ui
               uri: ${discovery.dashboard-url:http://localhost:8761}
               predicates:
@@ -80,9 +75,8 @@ spring:
         jwt:
           issuer-uri: ${keycloak.issuer-uri}
 
-# Tek bir Swagger UI'da (http://localhost:8080/swagger-ui.html) tum servisler:
-# gateway'in kendi /v3/api-docs'u + SwaggerAggregatorConfig'in ayni-origin'e
-# tasidigi diger servislerin dokumanlari, ust-sagdaki dropdown'dan secilir.
+# Tek Swagger UI'da (http://localhost:8080/swagger-ui.html) tum servisler: gateway'in /v3/api-docs'u +
+# SwaggerAggregatorConfig'in tasidigi diger servis dokumanlari, dropdown'dan secilir.
 springdoc:
   swagger-ui:
     urls:
