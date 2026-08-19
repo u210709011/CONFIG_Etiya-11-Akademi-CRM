@@ -3,11 +3,13 @@
 
 server:
   port: ${PORT:0}
-  # Gateway'in ekledigi X-Forwarded-* header'larina guven - bkz. customer-service/application.yml aciklamasi.
+  # Gateway arkasinda calisiyoruz; disaridan gorunen gercek adresi gateway'in ekledigi
+  # header'lardan okur, kendi rastgele portunu degil.
   forward-headers-strategy: framework
 
 spring:
-  # B-15: bkz. customer-service/application.yml ayni ayarin aciklamasi.
+  # Olmayan bir adrese istek gelince (404) kendi standart hata formatimiz donsun diye -
+  # bu ikisi birlikte olmazsa Spring'in kendi varsayilan hata sayfasi donuyor.
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -17,18 +19,13 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
-    # Spring Cloud OpenFeign'in circuit breaker entegrasyonu varsayilan olarak her cagriyi
-    # ayri bir ExecutorService thread'inde calistirir (TimeLimiter). JwtTokenPropagationInterceptor
-    # ise kullanicinin JWT'sini SecurityContextHolder (thread-local) uzerinden okuyor - farkli
-    # thread'de bu context bos gelir ve interceptor sessizce gercek kullanici yerine M2M
-    # service-account token'ini gonderir. disable-time-limiter=true cagriyi cagiran thread'de
-    # senkron calistirir; timeout zaten asagidaki feign.client.config ile saglaniyor.
+    # Baska bir servise yapilan cagrilar, kullanicinin giris bilgisini kaybetmeden
+    # calissin diye - farkli bir is parcaciginda calistirilmasi engelleniyor.
     circuitbreaker:
       resilience4j:
         disable-time-limiter: true
-  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages",
-  # root'u arar) bunu bulamiyordu - her resolve() cagrisi NoSuchMessageException firlatiyor,
-  # yani her custom exception (AddressNotFoundException vb.) 404/409 yerine 500'e siziyordu.
+  # Hata mesaji metinleri bir alt klasorde tutuluyor; nerede aranacagi burada
+  # belirtilmezse hata mesajlari bulunamiyor.
   messages:
     basename: messages/messages
   jpa:
@@ -71,10 +68,7 @@ resilience4j:
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
-        # 404/409/400 gibi normal is kurali cevaplari (musteri bulunamadi, dogrulama hatasi vb.)
-        # downstream'in cokmesi degildir - bunlari "hata" sayarsak testte/normal kullanimda ust
-        # uste birkac 404 alinmasi bile circuit'i acip herkese 503 dondurebilir. FeignClientException
-        # butun 4xx alt tiplerini kapsar (NotFound/Conflict/BadRequest/...); 5xx ve baglanti
-        # hatalari (FeignServerException, RetryableException) yine hata olarak sayilmaya devam eder.
+        # Baska servisten gelen "bulunamadi" gibi normal hata cevaplari, o servisin coktugu
+        # anlamina gelmez; bu tur hatalar devre kesiciyi tetiklemesin diye sayilmiyor.
         ignoreExceptions:
           - feign.FeignException$FeignClientException

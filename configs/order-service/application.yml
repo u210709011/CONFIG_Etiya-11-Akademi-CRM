@@ -2,7 +2,8 @@ server:
   port: ${PORT:0}
 
 spring:
-  # B-15: bkz. customer-service/application.yml ayni ayarin aciklamasi.
+  # Olmayan bir adrese istek gelince (404) kendi standart hata formatimiz donsun diye -
+  # bu ikisi birlikte olmazsa Spring'in kendi varsayilan hata sayfasi donuyor.
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -18,8 +19,8 @@ spring:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/order_db}
     username: ${DB_USERNAME:crm}
     password: ${DB_PASSWORD:crm}
-  # customer-service/contact-info-service/party-service/api-gateway ile ayni desen -
-  # messages/messages.properties alt klasorde oldugu icin bu sekilde tutarli yaziliyor.
+  # Hata mesaji metinleri bir alt klasorde tutuluyor; nerede aranacagi burada
+  # belirtilmezse hata mesajlari bulunamiyor.
   messages:
     basename: messages/messages
 

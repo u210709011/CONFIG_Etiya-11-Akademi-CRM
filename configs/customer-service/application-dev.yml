@@ -11,8 +11,7 @@ spring:
     redis:
       host: localhost
       port: 6379
-      # Redis erisilemez/yaniti yavassa istek Lettuce'un varsayilan (uzun) timeout'una
-      # kadar askida kalmasin diye - Feign'deki 2s/4s disiplinin ayni sekilde Redis icin de.
+      # Redis yavas cevap verirse istek uzun sure beklemesin diye kisa bir sure sinirlandi.
       connect-timeout: 2000ms
       timeout: 2000ms
   security:
@@ -26,11 +25,8 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-# PartyEventListener/ContactMediumEventListener gibi istekle tetiklenmeyen
-# Kafka consumer'larda FeignConfig'in JWT propagation'i yapacak bir kullanici
-# istegi yok - service-account (client_credentials) token'i icin. crm-client
-# (api-gateway'in interaktif login client'i) DEGIL, ayri bir M2M client
-# kullanilir - bkz. infra/keycloak/crm-realm.json.
+# Kafka mesajlari bir kullanicinin istegiyle degil arka planda tetiklendigi icin, buradaki
+# giris bilgisi normal kullanici girisi degil - sadece bu servise ait otomatik bir hesap.
 keycloak:
   client-id: customer-service-m2m
   client-secret: customer-service-m2m-secret

@@ -5,7 +5,8 @@ server:
   port: ${PORT:0}
 
 spring:
-  # B-15: bkz. customer-service/application.yml ayni ayarin aciklamasi.
+  # Olmayan bir adrese istek gelince (404) kendi standart hata formatimiz donsun diye -
+  # bu ikisi birlikte olmazsa Spring'in kendi varsayilan hata sayfasi donuyor.
   mvc:
     throw-exception-if-no-handler-found: true
   web:

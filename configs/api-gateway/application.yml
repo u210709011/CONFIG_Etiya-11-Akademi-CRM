@@ -15,9 +15,8 @@ management:
         include: health,info,metrics,gateway
 
 spring:
-  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages") onu
-  # bulamiyor, resolve() NoSuchMessageException atip custom exception'lari (orn.
-  # AccountLockedException) 401/423 yerine 500'e dusuruyordu. Ayni fix diger servislerde de var.
+  # Hata mesaji metinleri bir alt klasorde tutuluyor; nerede aranacagi burada
+  # belirtilmezse hata mesajlari bulunamiyor.
   messages:
     basename: messages/messages
   cloud:
@@ -61,7 +60,7 @@ spring:
               predicates:
                 - Path=/api/v1/general-types/**,/api/v1/general-statuses/**,/api/v1/characteristic-values/**,/api/v1/characteristics/**,/api/v1/resource-specs/**,/api/v1/service-specs/**,/api/v1/type-values/**
 
-            # Eureka paneline gateway uzerinden erisim; adres ortama gore degisir (bkz. discovery.dashboard-url).
+            # Servis kayit panosuna (Eureka) gateway uzerinden de erisim saglar; adres ortama gore degisir.
             - id: discovery-server-ui
               uri: ${discovery.dashboard-url:http://localhost:8761}
               predicates:
@@ -75,8 +74,8 @@ spring:
         jwt:
           issuer-uri: ${keycloak.issuer-uri}
 
-# Tek Swagger UI'da (http://localhost:8080/swagger-ui.html) tum servisler: gateway'in /v3/api-docs'u +
-# SwaggerAggregatorConfig'in tasidigi diger servis dokumanlari, dropdown'dan secilir.
+# Tum servislerin API dokumanlari tek bir sayfada (http://localhost:8080/swagger-ui.html)
+# toplanir; ust-sagdaki listeden hangi servisin dokumani gorulecegi secilir.
 springdoc:
   swagger-ui:
     urls:

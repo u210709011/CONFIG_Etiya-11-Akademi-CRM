@@ -3,19 +3,13 @@
 
 server:
   port: ${PORT:0}
-  # Gateway'in ekledigi X-Forwarded-* header'larina guven: springdoc bu sayede
-  # OpenAPI servers[] alanini gateway'in disaridan gorunen adresiyle (localhost:8080)
-  # uretir, kendi ham host:port'unu (rastgele PORT) degil - Swagger UI "Try it out"
-  # aksi halde tarayicidan erisilemeyen bir adrese gitmeye calisir.
+  # Gateway arkasinda calisiyoruz; disaridan gorunen gercek adresi gateway'in ekledigi
+  # header'lardan okur, kendi rastgele portunu degil.
   forward-headers-strategy: framework
 
 spring:
-  # B-15: NoHandlerFoundException varsayilan olarak firlatilmaz, DispatcherServlet tamamen
-  # eslesmeyen path'lerde exception resolver'lara (dolayisiyla GlobalExceptionHandler'a) hic
-  # ugramadan dogrudan response.sendError(404) cagirir - bu da bizim ErrorResponse kontratimiz
-  # yerine Spring Boot'un varsayilan /error govdesini dondurur. add-mappings:false olmadan bu
-  # ayar hicbir etki etmez (static resource handler her seyi "eslesmedi" yerine kendi 404'une
-  # yonlendirebiliyor) - ikisi birlikte gerekiyor.
+  # Olmayan bir adrese istek gelince (404) kendi standart hata formatimiz donsun diye -
+  # bu ikisi birlikte olmazsa Spring'in kendi varsayilan hata sayfasi donuyor.
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -25,15 +19,13 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
-    # Spring Cloud OpenFeign'in circuit breaker entegrasyonu varsayilan olarak her cagriyi
-    # ayri bir ExecutorService thread'inde calistirir (TimeLimiter). JwtTokenPropagationInterceptor
-    # ise kullanicinin JWT'sini SecurityContextHolder (thread-local) uzerinden okuyor - farkli
-    # thread'de bu context bos gelir ve interceptor sessizce gercek kullanici yerine M2M
-    # service-account token'ini gonderir. disable-time-limiter=true cagriyi cagiran thread'de
-    # senkron calistirir; timeout zaten asagidaki feign.client.config ile saglaniyor.
+    # Baska bir servise yapilan cagrilar, kullanicinin giris bilgisini kaybetmeden
+    # calissin diye - farkli bir is parcaciginda calistirilmasi engelleniyor.
     circuitbreaker:
       resilience4j:
         disable-time-limiter: true
+  # Hata mesaji metinleri bir alt klasorde tutuluyor; nerede aranacagi burada
+  # belirtilmezse hata mesajlari bulunamiyor.
   messages:
     basename: messages/messages
   jpa:
@@ -65,9 +57,8 @@ management:
       exposure:
         include: health,info,metrics,circuitbreakers
 
-# party-service/contact-info-service/lookup-service'e yapilan Feign cagrilarinin hicbir
-# timeout/circuit-breaker koruma olmadan cagrilan servis tikanirsa (deadlock, cok yavas DB,
-# vs.) library default'u (connect 10s / read 60s) kadar askida kalmasini onlemek icin.
+# Feign cagrilari - korumasiz birakilirsa cagrilan servis tikandiginda library default'u
+# (connect 10s / read 60s) kadar askida kalir.
 feign:
   client:
     config:
@@ -87,10 +78,7 @@ resilience4j:
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
-        # 404/409/400 gibi normal is kurali cevaplari (musteri bulunamadi, dogrulama hatasi vb.)
-        # downstream'in cokmesi degildir - bunlari "hata" sayarsak testte/normal kullanimda ust
-        # uste birkac 404 alinmasi bile circuit'i acip herkese 503 dondurebilir. FeignClientException
-        # butun 4xx alt tiplerini kapsar (NotFound/Conflict/BadRequest/...); 5xx ve baglanti
-        # hatalari (FeignServerException, RetryableException) yine hata olarak sayilmaya devam eder.
+        # Baska servisten gelen "bulunamadi" gibi normal hata cevaplari, o servisin coktugu
+        # anlamina gelmez; bu tur hatalar devre kesiciyi tetiklemesin diye sayilmiyor.
         ignoreExceptions:
           - feign.FeignException$FeignClientException

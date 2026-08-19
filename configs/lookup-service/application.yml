@@ -4,13 +4,13 @@
 
 server:
   port: ${PORT:0}
-  # Gateway'in ekledigi X-Forwarded-* header'larina guven - bkz. customer-service/application.yml aciklamasi.
+  # Gateway arkasinda calisiyoruz; disaridan gorunen gercek adresi gateway'in ekledigi
+  # header'lardan okur, kendi rastgele portunu degil.
   forward-headers-strategy: framework
 
 spring:
-  # messages/messages.properties alt klasorde oldugu icin varsayilan basename ("messages",
-  # root'u arar) bunu bulamiyordu - her resolve() cagrisi NoSuchMessageException firlatiyor,
-  # yani her custom exception (EntityNotFoundException vb.) 404/409 yerine 500'e siziyordu.
+  # Hata mesaji metinleri bir alt klasorde tutuluyor; nerede aranacagi burada
+  # belirtilmezse hata mesajlari bulunamiyor.
   messages:
     basename: messages/messages
   jpa:

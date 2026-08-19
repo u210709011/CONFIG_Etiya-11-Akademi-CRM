@@ -1,7 +1,5 @@
 # contact-info-service - dev ortami.
-# Sema artik Flyway ile yonetilir (bkz. src/main/resources/db/migration). Bu ortamda
-# DB onceden Hibernate ddl-auto: update ile olusturulmustu - baseline-on-migrate,
-# V1'i (baseline) calistirmadan "zaten uygulanmis" sayar; V2+ normal calisir.
+# DB onceden ddl-auto:update ile olusturulmustu; baseline-on-migrate V1'i "zaten uygulanmis" sayar.
 
 spring:
   datasource:
