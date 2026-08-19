@@ -6,6 +6,9 @@ server:
   # Gateway arkasinda calisiyoruz; disaridan gorunen gercek adresi gateway'in ekledigi
   # header'lardan okur, kendi rastgele portunu degil.
   forward-headers-strategy: framework
+  # Restart/deploy sirasinda devam eden istekler kesilmesin diye - JVM yeni istek almayi
+  # birakir ama devam edenlerin bitmesini bekler.
+  shutdown: graceful
 
 spring:
   # Olmayan bir adrese istek gelince (404) kendi standart hata formatimiz donsun diye -
@@ -34,6 +37,17 @@ spring:
       ddl-auto: validate
   flyway:
     enabled: true
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  datasource:
+    hikari:
+      pool-name: ${spring.application.name}-hikari
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 3000
+      idle-timeout: 60000
+      max-lifetime: 600000
+      leak-detection-threshold: 30000
   kafka:
     consumer:
       group-id: customer-service
@@ -54,7 +68,17 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,circuitbreakers
+        include: health,info,metrics,circuitbreakers,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: ${TEMPO_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
 
 # Feign cagrilari - korumasiz birakilirsa cagrilan servis tikandiginda library default'u
 # (connect 10s / read 60s) kadar askida kalir.

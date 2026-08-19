@@ -3,6 +3,7 @@
 
 server:
   port: ${PORT:8080}
+  shutdown: graceful
 
 eureka:
   instance:
@@ -12,13 +13,25 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,gateway
+        include: health,info,metrics,gateway,prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: ${TEMPO_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
 
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
   # Hata mesaji metinleri bir alt klasorde tutuluyor; nerede aranacagi burada
   # belirtilmezse hata mesajlari bulunamiyor.
   messages:
     basename: messages/messages
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   cloud:
     gateway:
       server:
@@ -29,6 +42,14 @@ spring:
               # internal servis adlari dis API'ye sizar, ayni kaynak iki path'ten erisilebilir olur.
               enabled: false
               lower-case-service-id: true
+          # Tum route'lara uygulanan varsayilan filtre - client basina rate limit.
+          # RateLimiterConfig#ipKeyResolver bean'ini SpEL ile referans alir.
+          default-filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 20
+                redis-rate-limiter.burstCapacity: 40
+                key-resolver: "#{@ipKeyResolver}"
           routes:
             - id: party-service
               uri: lb://party-service
