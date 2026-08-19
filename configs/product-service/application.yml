@@ -58,6 +58,12 @@ management:
   otlp:
     tracing:
       endpoint: ${TEMPO_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+  metrics:
+    distribution:
+      # p95/p99 gibi percentile sorgulari icin histogram bucket'lari acar -
+      # varsayilanda sadece count/sum uretiliyor, histogram_quantile() bunlarla calismaz.
+      percentiles-histogram:
+        http.server.requests: true
 
 logging:
   level:
